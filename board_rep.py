@@ -11,8 +11,22 @@ class Board:
                       ['.', '.', '.']]
 
     def __str__(self):
-        return  str(self.board[0]) + '\n' + str(self.board[1]) + '\n' + str(self.board[2]) + '\n' + str(self.board[3]) + '\n' + str(self.board[4]) + '\n' + str(self.board[5]) + '\n' + str(self.board[6])
-
+        
+        print(self.board[0][0], '-' * 12, self.board[0][1], '-' * 12, self.board[0][2])
+        print('|', ' ' * 12, '|', ' ' * 12, '|')
+        print('| ', self.board[1][0], '-' * 9, self.board[1][1], '-' * 9, self.board[1][2], ' |')
+        print('|   ' * 2, ' ' * 5, '|', ' ' * 5, '   |' * 2)
+        print('|   ' * 2, self.board[2][0], '-' * 3, self.board[2][1], '-' * 3, self.board[2][2], '   |' * 2)
+        print('|   ' * 3, ' ' * 5, '   |' * 3)
+        print(self.board[3][0], '-', self.board[3][1], '-', self.board[3][2], ' ' * 11, self.board[3][3], '-', self.board[3][4], '-', self.board[3][5])
+        print('|   ' * 3, ' ' * 5, '   |' * 3)
+        print('|   ' * 2, self.board[4][0], '-' * 3, self.board[4][1], '-' * 3, self.board[4][2], '   |' * 2)
+        print('|   ' * 2, ' ' * 5, '|', ' ' * 5, '   |' * 2)
+        print('| ', self.board[5][0], '-' * 9, self.board[5][1], '-' * 9, self.board[5][2], ' |')
+        print('|', ' ' * 12, '|', ' ' * 12, '|')
+        print(self.board[6][0], '-' * 12, self.board[6][1], '-' * 12, self.board[6][2])
+        return 'Board current state'
+        
     def get_board(self):
         return self.board
 
@@ -20,9 +34,13 @@ class Board:
         self.board = board
 
     def get_piece(self, row, col):
+        row = int(row)
+        col = int(col)
         return self.board[row][col]
 
     def set_piece(self, row, col, piece):
+        row = int(row)
+        col = int(col)
         self.board[row][col] = piece
 
     def count_pieces(self, piece):
@@ -32,6 +50,14 @@ class Board:
                 if col == piece:
                     count += 1
         return count
+    
+    def inside_board(self, row, col):
+        row = int(row)
+        col = int(col)
+        if row >= 0 and row < len(self.board):
+            if col >= 0 and col < len(self.board[row]):
+                return True
+        return False
     
     def get_empty_spaces(self):
         empty_spaces = []
@@ -50,6 +76,8 @@ class Board:
         return pieces
 
     def get_adjacent_spaces(self, row, col):
+        row = int(row)
+        col = int(col)
         adjacent_spaces = []
         if row - 1 >= 0:
             adjacent_spaces.append((row - 1, col))
@@ -62,7 +90,8 @@ class Board:
         return adjacent_spaces
 
     def get_adjacent_pieces(self, row, col, piece):
-
+        row = int(row)
+        col = int(col)
         adjacent_spaces = self.get_adjacent_spaces(row, col)
         adjacent_pieces = []
         for space in adjacent_spaces:
@@ -71,6 +100,8 @@ class Board:
         return adjacent_pieces
 
     def get_adjacent_empty_spaces(self, row, col):
+        row = int(row)
+        col = int(col)
         adjacent_spaces = self.get_adjacent_spaces(row, col)
         adjacent_empty_spaces = []
         for space in adjacent_spaces:
@@ -78,16 +109,22 @@ class Board:
                 adjacent_empty_spaces.append(space)
         return adjacent_empty_spaces
 
-    def find_mill(self, row, col, piece):
-        # Three pieces of the same type in a line
+    def find_mill(self, row, col, turn):
+        #Three pieces of the same type in a line
         # Horizontal
-        if row == 0 or row == 3 or row == 6:
-            if self.board[row][0] == piece and self.board[row][1] == piece and self.board[row][2] == piece:
+        piece = turn
+        row = int(row)
+        col = int(col)
+        
+        if self.board[row][0] == piece and self.board[row][1] == piece and self.board[row][2] == piece:
+            return True
+            
+        elif row ==3 and self.board[row][3] == piece and self.board[row][4] == piece and self.board[row][5] == piece:
                 return True
-        # Vertical
-        if col == 0 or col == 3 or col == 6:
-            if self.board[0][col] == piece and self.board[1][col] == piece and self.board[2][col] == piece:
-                return True
-        return False
 
-    
+        # Potential vertical mill coordinates
+        pot_mills = [[[0,0],[3,0],[6,0]],[[0,2],[3,5],[6,2]],[[1,0],[3,1],[5,0]],[[1,2],[3,4],[5,2]],[[0,1],[1,1],[2,1]],[[4,1],[5,1],[6,1]],[[2,0],[3,2],[4,0]],[[2,2],[3,3],[4,2]]]
+        for mill in pot_mills:
+            if self.board[mill[0][0]][mill[0][1]] == piece and self.board[mill[1][0]][mill[1][1]] == piece and self.board[mill[2][0]][mill[2][1]] == piece:
+                return True
+    #om 
