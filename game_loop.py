@@ -34,4 +34,4 @@ class game_loop:
             self.next_turn()
         self.print_winner()
             
-#Share
+#Make function that prints rules of the game

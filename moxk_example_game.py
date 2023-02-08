@@ -1,5 +1,5 @@
 # Chose a phase 1 2 or 3
-#Can not take away 2 pecieses if 2 mills are formed!!!
+#Can not take away 2 pecieses if 2 mills are formed!!! 
 from board_rep import Board
 from game_loop import game_loop
 from mock_rule import mock_rule_check
@@ -10,6 +10,7 @@ board = Board()
 rule_pass = False
 opponent = {'W':'B','B':'W'}
 while game.game_over == "False":
+    ###Print rules by calling print rule funciton first itteration if game.turn==1
     board = game.board
     
     if game.nr_turns%2 == 1: #game.nr:turns%2 = player
@@ -45,7 +46,7 @@ while game.game_over == "False":
       
     
         
-    else:
+    else: #Phase 2 and 3 starts here
         while rule_pass == False:
             
             print("Pick pecie from borad to move\n")
@@ -97,4 +98,5 @@ while game.game_over == "False":
 
 print("The game is over. The winner is ", game.winner)
 
-#share
+#For adjensent, use  input of pecie you want to move as input
+#
