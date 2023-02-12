@@ -1,7 +1,7 @@
 from board_rep import Board
+from game_loop import game_loop
 
-def mock_rule_check(board, move, turn, type_of_move):
-    
+def mock_rule_check(board, move, turn, type_of_move, game):
     if isnt_int(move[0]) or isnt_int(move[1]):
         return ['False', 'Input was not a number']
     
@@ -19,6 +19,9 @@ def mock_rule_check(board, move, turn, type_of_move):
             return ['False', 'Move is outside of board']
 
         if board.count_pieces(turn) > 3: #Phase 3 starts
+            if  game.game_phase == 2 or game.game_phase == 1:
+                game.game_phase = 3 
+                game.rule_print()
             if move[2:] in board.get_adjacent_spaces(move[0],move[1]):
                 if board.get_piece(move[2], move[3]) != '.':
                     return ['False', 'That space is already occupied.']
@@ -56,3 +59,5 @@ def isnt_int(s):
         return False
     except ValueError:
         return True
+    
+    ##

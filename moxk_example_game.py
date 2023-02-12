@@ -1,5 +1,5 @@
 # Chose a phase 1 2 or 3
-#Can not take away 2 pecieses if 2 mills are formed!!! 
+#Can not take away 2 pieceses if 2 mills are formed!
 from board_rep import Board
 from game_loop import game_loop
 from mock_rule import mock_rule_check
@@ -8,8 +8,11 @@ from mock_rule import mock_rule_check
 game = game_loop()
 board = Board()
 rule_pass = False
+start_phase_2 = True
 opponent = {'W':'B','B':'W'}
-while game.game_over == "False":
+game.rule_print()
+start_game = input('Start game? y/n ')
+while game.game_over == "False" and start_game == 'y':
     ###Print rules by calling print rule funciton first itteration if game.turn==1
     board = game.board
     
@@ -28,13 +31,15 @@ while game.game_over == "False":
         
     if game.unplaced[p] > 0:
         while rule_pass == False:
-            print('Place pecie on a vaccen spot')
+            print('Place piece on a vacant spot')
             move_row = input('Input which row variable = ')
             move_coloumn = input('Input which coloumn variable = ')
-            rule_check = mock_rule_check(board,[move_row,move_coloumn],p,'place')
+            print(' ')
+            rule_check = mock_rule_check(board,[move_row,move_coloumn],p,'place',game)
         
             if rule_check[0] != 'True':
                 print(rule_check[1])
+                print(board)
             else:
                 rule_pass = True
         
@@ -47,19 +52,28 @@ while game.game_over == "False":
     
         
     else: #Phase 2 and 3 starts here
+        
+        if start_phase_2 == True:
+            game.game_phase = 2
+            game.rule_print()
+            start_phase_2 = False
+        
+        
         while rule_pass == False:
             
-            print("Pick pecie from borad to move\n")
+            print("Pick piece from board to move")
             pick_row = input("Pick row ")
             pick_coloumn = input("Pick coloumn ")
             
-            print('Move to adjecent pecie \n')
+            print('Move to adjecent piece \n')
             move_row = input('Input which row variable = ')
             move_coloumn = input('Input which coloumn variable = ')
-            rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'move')
+            print(' ')
+            rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'move',game)
             
             if rule_check[0] != 'True':
                 print(rule_check[1])
+                print(board)
             else: 
                 rule_pass =  True
         game.board.set_piece(pick_row, pick_coloumn, '.')
@@ -67,25 +81,30 @@ while game.game_over == "False":
         
     
     if game.inventory['B'] < 3 or game.inventory['W'] < 3:
+        game.game_phase = 'End'  
         game.game_over = True
         if game.inventory['B'] < 3:
             game.winner = 'W'
         else:
             game.winner = 'B'
+        game.rule_print()    
+        break #Breaks the while loop    
 
     if board.find_mill(move_row, move_coloumn, p):
         print(board)
         rule_pass = False
         
-        print("Mill formed.")
-        print("Pick piece from board to remove\n")
+        print(f"Mill formed by {p}")
+        print(f"Pick piece from {opponent[p]}'s to remove")
 
         while rule_pass == False:
-            pick_row = int(input("Pick row "))
-            pick_coloumn = int(input("Pick coloumn "))
-            rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'remove')
+            pick_row = int(input("Pick row = "))
+            pick_coloumn = int(input("Pick coloumn = "))
+            print(' ')
+            rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'remove',game)
             if rule_check[0] != 'True':
                 print(rule_check[1])
+                print(board)
             else:
                 rule_pass =  True
                 
@@ -95,8 +114,12 @@ while game.game_over == "False":
     game.nr_turns += 1
     rule_pass = False
     
+if start_game == 'n':
+    print("Game not started")
+elif start_game != 'y' and start_game != 'n':
+    print("Invalid input, restart")
+else:    
+    print("Goodbye!")
 
-print("The game is over. The winner is ", game.winner)
-
-#For adjensent, use  input of pecie you want to move as input
-#
+#For adjensent, use  input of piece you want to move as input
+####
