@@ -8,7 +8,6 @@ from mock_rule import mock_rule_check
 game = game_loop()
 board = Board()
 rule_pass = False
-start_phase_2 = True
 opponent = {'W':'B','B':'W'}
 game.rule_print()
 start_game = input('Start game? y/n ')
@@ -53,10 +52,11 @@ while game.game_over == "False" and start_game == 'y':
         
     else: #Phase 2 and 3 starts here
         
-        if start_phase_2 == True:
-            game.game_phase = 2
-            game.rule_print()
-            start_phase_2 = False
+        if game.game_phase == 1: #Phase 3 could have been initizalised before, so only print rules
+            #If phase 1 is over.
+            game.game_phase = 2 #If phase 1 is over. start phase 2.
+            game.rule_print() #Phase 3 starts in mock_rule
+            
         
         
         while rule_pass == False:

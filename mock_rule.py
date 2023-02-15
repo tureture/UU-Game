@@ -18,15 +18,18 @@ def mock_rule_check(board, move, turn, type_of_move, game):
         elif board.inside_board(move[2],move[3])==False:
             return ['False', 'Move is outside of board']
 
-        if board.count_pieces(turn) > 3: #Phase 3 starts
-            if  game.game_phase == 2 or game.game_phase == 1:
-                game.game_phase = 3 
-                game.rule_print()
-            if move[2:] in board.get_adjacent_spaces(move[0],move[1]):
+        if board.count_pieces(turn) > 3: 
+            mov_1= int(move[2])
+            mov_2= int(move[3])
+            if [mov_1,mov_2] in board.get_adjacent_spaces(move[0],move[1]):
                 if board.get_piece(move[2], move[3]) != '.':
                     return ['False', 'That space is already occupied.']
             else:   
                 return ['False', 'Non-adjacent']
+        if board.count_pieces(turn) <= 3: #Phase 3 starts    
+                if  game.game_phase == 2 or game.game_phase == 1:
+                    game.game_phase = 3 
+                    game.rule_print()
         
         if board.get_piece(move[0], move[1]) == '.':
             return ['False', 'That space is empty.']

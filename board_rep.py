@@ -75,19 +75,74 @@ class Board:
                     pieces.append((row, col))
         return pieces
 
+    # def get_adjacent_spaces(self, row, col):
+    #     row = int(row)
+    #     col = int(col)
+    #     adjacent_spaces = []
+    #     if row - 1 >= 0:
+    #         adjacent_spaces.append((row - 1, col))
+    #     if row + 1 < len(self.board):
+    #         adjacent_spaces.append((row + 1, col))
+    #     if col - 1 >= 0:
+    #         adjacent_spaces.append((row, col - 1))
+    #     if col + 1 < len(self.board[row]):
+    #         adjacent_spaces.append((row, col + 1))
+    #     return adjacent_spaces
+    
     def get_adjacent_spaces(self, row, col):
         row = int(row)
         col = int(col)
-        adjacent_spaces = []
-        if row - 1 >= 0:
-            adjacent_spaces.append((row - 1, col))
-        if row + 1 < len(self.board):
-            adjacent_spaces.append((row + 1, col))
-        if col - 1 >= 0:
-            adjacent_spaces.append((row, col - 1))
-        if col + 1 < len(self.board[row]):
-            adjacent_spaces.append((row, col + 1))
-        return adjacent_spaces
+        #ajacent_spaces = []
+        #Can you turn all tuples into lists? For the whole function
+        if([row, col] == [0, 0]):
+            return [[0, 1], [3, 0]]
+        if([row, col] == [0, 1]):
+            return [[0, 0], [0, 2], [1, 1]]
+        if([row, col] == [0, 2]):
+            return [[0, 1], [3, 5]]
+        if([row, col] == [1, 0]):
+            return [[1, 1], [3, 1]]
+        if([row, col] == [1, 1]):
+            return [[1, 0], [1, 2], [2, 1], [0, 1]]
+        if([row, col] == [1, 2]):
+            return [[1, 1], [3, 4]]
+        if([row, col] == [2, 0]):
+            return [[2, 1], [3, 2]]
+        if([row, col] == [2, 1]):
+            return [[2, 0], [2, 2], [1, 1]]
+        if([row, col] == [2, 2]):
+            return [[2, 1], [3, 3]]
+        if([row, col] == [3, 0]):
+            return [[0, 0], [3, 1], [6, 0]]
+        if([row, col] == [3, 1]):
+            return [[3, 0], [3, 2], [1, 0], [5, 0]]
+        if([row, col] == [3, 2]):
+            return [[3, 1], [2, 0], [4, 0]]
+        if([row, col] == [3, 3]):
+            return [[2, 2], [4, 2], [3, 4]]
+        if([row, col] == [3, 4]):
+            return [[3, 3], [1, 2], [5, 2], [3, 5]]
+        if([row, col] == [3, 5]):
+            return [[0, 2], [3, 4], [6, 2]]
+        if([row, col] == [4, 0]):
+            return [[4, 1], [3, 2]]
+        if([row, col] == [4, 1]):
+            return [[4, 0], [4, 2], [5, 1]]
+        if([row, col] == [4, 2]):
+            return [[4, 1], [3, 3]]
+        if([row, col] == [5, 0]):
+            return [[5, 1], [3, 1]]
+        if([row, col] == [5, 1]):
+            return [[5, 0], [5, 2], [4, 1], [6, 1]]
+        if([row, col] == [5, 2]):
+            return [[5, 1], [3, 4]]
+        if( [row, col] == [6, 0]):
+            return [[3, 0], [6, 1]]
+        if([row, col] == [6, 1]):
+            return [[6, 0], [6, 2], [5, 1]]
+        if([row, col] == [6, 2]):
+            return [[6, 1], [3, 5]]
+        
 
     def get_adjacent_pieces(self, row, col, piece):
         row = int(row)
