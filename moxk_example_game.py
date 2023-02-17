@@ -90,7 +90,26 @@ while game.game_over == "False" and start_game == 'y':
         game.rule_print()    
         break #Breaks the while loop    
 
-    if board.find_mill(move_row, move_coloumn, p):
+    if board.find_mill(move_row, move_coloumn, p): 
+        
+        #itterate over all positions in the board to find what if the peice is 'B' or 'W' and not in a mill
+        #Set to 0 Before every itteration to avoid memories
+        
+        game.free_pieces = {'W':[],'B':[]} # Pieces that are not in a mill
+        game.pieces_in_mills = {'W':[],'B':[]} #Pieces that are in a milly
+        lst=[]
+        lst2=[]
+        for i in range(0,9):
+            for j in range(0,9):
+                if board.get_piece(i,j) == opponent[p]:
+                    lst.append([i,j])
+                if board.get_piece(i,j) == opponent[p] and board.find_mill(i, j, opponent[p]):
+                    game.pieces_in_mills[opponent[p]].append([i,j])
+                elif board.get_piece(i,j) == opponent[p] and not board.find_mill(i, j, opponent[p]):
+                    game.free_pieces[opponent[p]].append([i,j]) #Pieces that are not in a mill   
+                    lst2.append([i,j])
+
+
         print(board)
         rule_pass = False
         
@@ -100,6 +119,13 @@ while game.game_over == "False" and start_game == 'y':
         while rule_pass == False:
             pick_row = int(input("Pick row = "))
             pick_coloumn = int(input("Pick coloumn = "))
+            
+            if game.free_pieces[opponent[p]] != []: #If there are free pieces, you can only remove free pieces
+                if [pick_row,pick_coloumn] in game.pieces_in_mills[opponent[p]]:
+                    print("You can only remove free pieces, not formed mills")
+                    print(board)
+                    continue #Continue to next itteration of while loop
+            
             print(' ')
             rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'remove',game)
             if rule_check[0] != 'True':

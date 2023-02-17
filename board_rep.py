@@ -36,7 +36,10 @@ class Board:
     def get_piece(self, row, col):
         row = int(row)
         col = int(col)
-        return self.board[row][col]
+        if self.inside_board(row, col) == False:
+            return None
+        else:
+            return self.board[row][col]
 
     def set_piece(self, row, col, piece):
         row = int(row)
@@ -176,15 +179,14 @@ class Board:
             
         elif row ==3 and self.board[row][3] == piece and self.board[row][4] == piece and self.board[row][5] == piece:
                 return True
-
         # Potential vertical mill coordinates
         pot_mills = [[[0,0],[3,0],[6,0]],[[0,2],[3,5],[6,2]],[[1,0],[3,1],[5,0]],[[1,2],[3,4],[5,2]],[[0,1],[1,1],[2,1]],[[4,1],[5,1],[6,1]],[[2,0],[3,2],[4,0]],[[2,2],[3,3],[4,2]]]
         for mill in pot_mills:
             if self.board[mill[0][0]][mill[0][1]] == piece and self.board[mill[1][0]][mill[1][1]] == piece and self.board[mill[2][0]][mill[2][1]] == piece:
                 if [row,col] == [mill[0][0],mill[0][1]] or [row,col] == [mill[1][0],mill[1][1]] or [row,col] == [mill[2][0],mill[2][1]]:
                     return True
-                else: 
-                    return False
+   
+                
     #om 
     
     
