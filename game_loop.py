@@ -34,6 +34,7 @@ class game_loop:
             self.game_over = mock_end(self.board, self.nr_turns)
             self.next_turn()
         self.print_winner()
+
             
     def rule_print(self): #Function that prints rules of the game, called with base rules in p1, as well as rule changes in p2 and p3 respectively
         if self.game_phase == 1:
