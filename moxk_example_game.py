@@ -88,7 +88,7 @@ while game.game_over == "False" and start_game == 'y':
         else:
             game.winner = 'B'
         game.rule_print()    
-        break #Breaks the while loop    
+        break #Breaks the while loop  
 
     if board.find_mill(move_row, move_coloumn, p): 
         
@@ -135,8 +135,22 @@ while game.game_over == "False" and start_game == 'y':
                 rule_pass =  True
                 
         game.board.set_piece(pick_row, pick_coloumn, '.')
-        game.inventory[opponent[p]] -= 1 
-            
+        game.inventory[opponent[p]] -= 1
+
+    # Check if opponent has legal moves
+    if game.inventory[opponent[p]] >3 and game.unplaced[opponent[p]] == 0:
+        # Check if opponent has free adjecent pieces
+        placed_pieces = board.get_pieces(opponent[p])
+        free = []
+        for piece in placed_pieces:
+            free.append(board.get_adjacent_empty_spaces(piece[0],piece[1]))
+        if all([len(f) == 0 for f in free]):
+            game.game_phase = 'End' 
+            game.game_over = True
+            game.winner = p
+            game.rule_print()
+            break #Breaks the while loop
+
     game.nr_turns += 1
     rule_pass = False
     
