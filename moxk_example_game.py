@@ -52,20 +52,32 @@ while game.game_over == "False" and start_game == 'y':
         
     else: #Phase 2 and 3 starts here
         
+        if board.count_pieces(p) <= 3: #Phase 3 starts    
+            if  game.game_phase == 2:
+                game.game_phase = 3 
+                game.rule_print()
+            elif game.game_phase == 1:
+                game.game_phase = 2 
+                game.rule_print()
+                game.game_phase = 3 
+                game.rule_print()    
+        
         if game.game_phase == 1: #Phase 3 could have been initizalised before, so only print rules
             #If phase 1 is over.
             game.game_phase = 2 #If phase 1 is over. start phase 2.
             game.rule_print() #Phase 3 starts in mock_rule
             
-        
+
         
         while rule_pass == False:
             
             print("Pick piece from board to move")
             pick_row = input("Pick row ")
             pick_coloumn = input("Pick coloumn ")
-            
-            print('Move to adjecent piece \n')
+            if game.game_phase == 2:
+                print('Move to adjecent piece \n')
+            elif game.game_phase == 3:
+                print('Move to any piece \n')
             move_row = input('Input which row variable = ')
             move_coloumn = input('Input which coloumn variable = ')
             print(' ')
@@ -80,7 +92,69 @@ while game.game_over == "False" and start_game == 'y':
         game.board.set_piece(move_row, move_coloumn, p)
         
     
-    if game.inventory['B'] < 3 or game.inventory['W'] < 3:
+
+
+    if board.find_mill(move_row, move_coloumn, p): 
+        
+        #itterate over all positions in the board to find what if the peice is 'B' or 'W' and not in a mill
+        #Set to 0 Before every itteration to avoid memories
+        
+        free_pieces = [] # Pieces that are not in a mill
+        pieces_in_mills = [] #Pieces that are in a milly
+
+        for i in range(0,9):
+            for j in range(0,9):
+                if board.get_piece(i,j) == opponent[p] and board.find_mill(i, j, opponent[p]):
+                    pieces_in_mills.append([i,j])
+               
+                elif board.get_piece(i,j) == opponent[p] and not board.find_mill(i, j, opponent[p]):
+                    free_pieces.append([i,j]) #Pieces that are not in a mill   
+                
+
+        print(f"free pieces = {free_pieces}")
+        print(f"pieces in mills = {pieces_in_mills}")
+
+        print(board)
+        rule_pass = False
+        
+        print(f"Mill formed by {p}")
+        print(f"Pick piece from {opponent[p]}'s to remove")
+
+        while rule_pass == False:
+            pick_row = (input("Pick row = "))
+            pick_coloumn = input("Pick coloumn = ")
+            
+            rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'remove',game)
+            if rule_check[0] != 'True':
+                print(rule_check[1])
+                print(board)
+                continue            
+            else:               
+                if free_pieces != []: #If there are free pieces, you can only remove free pieces
+                    if [int(pick_row),int(pick_coloumn)] in pieces_in_mills:
+                        print("You can only remove free pieces, not formed mills")
+                        print(board)
+                        continue #Continue to next itteration of while loop
+                rule_pass =  True    
+            
+            print(' ')
+
+
+                
+        game.board.set_piece(pick_row, pick_coloumn, '.')
+        game.inventory[opponent[p]] -= 1
+        
+        
+    #Wining conditions
+    
+    if game.nr_turns >= 300: #If 300 turns have passed, the game is over
+        if game.inventory['B'] > game.inventory['W']:
+            game.winner = 'B'
+        else:
+            game.winner = 'W'
+            
+            
+    if game.inventory['B'] < 3 or game.inventory['W'] < 3: #If one player has less than 3 pieces, the game is over
         game.game_phase = 'End'  
         game.game_over = True
         if game.inventory['B'] < 3:
@@ -90,55 +164,8 @@ while game.game_over == "False" and start_game == 'y':
         game.rule_print()    
         break #Breaks the while loop  
 
-    if board.find_mill(move_row, move_coloumn, p): 
-        
-        #itterate over all positions in the board to find what if the peice is 'B' or 'W' and not in a mill
-        #Set to 0 Before every itteration to avoid memories
-        
-        game.free_pieces = {'W':[],'B':[]} # Pieces that are not in a mill
-        game.pieces_in_mills = {'W':[],'B':[]} #Pieces that are in a milly
-        lst=[]
-        lst2=[]
-        for i in range(0,9):
-            for j in range(0,9):
-                if board.get_piece(i,j) == opponent[p]:
-                    lst.append([i,j])
-                if board.get_piece(i,j) == opponent[p] and board.find_mill(i, j, opponent[p]):
-                    game.pieces_in_mills[opponent[p]].append([i,j])
-                elif board.get_piece(i,j) == opponent[p] and not board.find_mill(i, j, opponent[p]):
-                    game.free_pieces[opponent[p]].append([i,j]) #Pieces that are not in a mill   
-                    lst2.append([i,j])
-
-
-        print(board)
-        rule_pass = False
-        
-        print(f"Mill formed by {p}")
-        print(f"Pick piece from {opponent[p]}'s to remove")
-
-        while rule_pass == False:
-            pick_row = int(input("Pick row = "))
-            pick_coloumn = int(input("Pick coloumn = "))
-            
-            if game.free_pieces[opponent[p]] != []: #If there are free pieces, you can only remove free pieces
-                if [pick_row,pick_coloumn] in game.pieces_in_mills[opponent[p]]:
-                    print("You can only remove free pieces, not formed mills")
-                    print(board)
-                    continue #Continue to next itteration of while loop
-            
-            print(' ')
-            rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'remove',game)
-            if rule_check[0] != 'True':
-                print(rule_check[1])
-                print(board)
-            else:
-                rule_pass =  True
-                
-        game.board.set_piece(pick_row, pick_coloumn, '.')
-        game.inventory[opponent[p]] -= 1
-
-    # Check if opponent has legal moves
-    if game.inventory[opponent[p]] >3 and game.unplaced[opponent[p]] == 0:
+    # Check if opponent has legal moves, if no, game is over
+    if game.inventory[opponent[p]] >3 and game.unplaced[opponent[p]] == 0: 
         # Check if opponent has free adjecent pieces
         placed_pieces = board.get_pieces(opponent[p])
         free = []

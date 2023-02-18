@@ -1,2 +1,1 @@
-
-    ###Print rules by calling print rule funciton first itterati
+ board.find_mill(i, j, opponent[p])

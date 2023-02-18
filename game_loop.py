@@ -15,8 +15,6 @@ class game_loop:
         self.unplaced = {'B': 9, 'W': 9}  # Keep track of the number of pieces each player has yet to place
         self.inputsources = {'B': mock_player(), 'W': mock_player()} # Keep track of the input source for each player
         self.game_phase = 1 #Game phase starts at 1, 2 and 3 are the other phases, phase 4 is the endgame phase.
-        self.pieces_in_mills = {'B':[],'W':[]} #Keeps track of the pieces that are free to move, i.e. not in a mill formation
-        self.free_pieces = {'B':[],'W':[]} #Keeps track of the pieces that are free to move, i.e. not in a mill formation
 
         
 
