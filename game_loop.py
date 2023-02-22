@@ -18,18 +18,6 @@ class game:
         self.game_phase = 1 #Game phase starts at 1, 2 and 3 are the other phases, phase 4 is the endgame phase.
         self.player = {'B':p1,'W':p2}
 
-        
-
-    def input(self):
-        return self.inputsources[self.turn]
-
-    def set_inputsource(self, player, source):
-        self.inputsources[player] = source
-    
-    def next_turn(self):
-        # Update the turn
-        # Update the number of turns
-        pass
 
     def start(self):
         rule_pass = False
