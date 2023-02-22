@@ -1,5 +1,4 @@
-from board_rep import Board
-from game_loop import game_loop
+
 
 def mock_rule_check(board, move, turn, type_of_move, game):
     if isnt_int(move[0]) or isnt_int(move[1]):
