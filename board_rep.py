@@ -175,10 +175,13 @@ class Board:
         col = int(col)
         
         if self.board[row][0] == piece and self.board[row][1] == piece and self.board[row][2] == piece:
-            return True
-            
-        elif row ==3 and self.board[row][3] == piece and self.board[row][4] == piece and self.board[row][5] == piece:
+            if [row,col] == [row,0] or [row,col] == [row,1] or [row,col] == [row,2]:
                 return True
+                
+        if row == 3 and self.board[row][3] == piece and self.board[row][4] == piece and self.board[row][5] == piece:
+            if [row,col] == [row,3] or [row,col] == [row,4] or [row,col] == [row,5]:
+                return True
+
         # Potential vertical mill coordinates
         pot_mills = [[[0,0],[3,0],[6,0]],[[0,2],[3,5],[6,2]],[[1,0],[3,1],[5,0]],[[1,2],[3,4],[5,2]],[[0,1],[1,1],[2,1]],[[4,1],[5,1],[6,1]],[[2,0],[3,2],[4,0]],[[2,2],[3,3],[4,2]]]
         for mill in pot_mills:
