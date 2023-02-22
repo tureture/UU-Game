@@ -177,7 +177,6 @@ class Board:
         if self.board[row][0] == piece and self.board[row][1] == piece and self.board[row][2] == piece:
             if [row,col] == [row,0] or [row,col] == [row,1] or [row,col] == [row,2]:
                 return True
-                
         if row == 3 and self.board[row][3] == piece and self.board[row][4] == piece and self.board[row][5] == piece:
             if [row,col] == [row,3] or [row,col] == [row,4] or [row,col] == [row,5]:
                 return True
