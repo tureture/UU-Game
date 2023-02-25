@@ -53,8 +53,6 @@ def mock_rule_check(board, move, turn, type_of_move, game):
                 return ['True', 'Valid move.']
     
 
-        
-
     else:
         return ['True','Valid move.']
     
