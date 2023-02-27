@@ -1,12 +1,12 @@
 # Chose a phase 1 2 or 3
 #Can not take away 2 pieceses if 2 mills are formed!
 from board_rep import Board
-from game_loop import game_loop
+from game_loop import game
 from mock_rule import mock_rule_check
 from input_player import to_coords
 
 
-game = game_loop()
+game = game()
 board = Board()
 rule_pass = False
 opponent = {'W':'B','B':'W'}
