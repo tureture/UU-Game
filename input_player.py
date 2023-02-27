@@ -62,8 +62,7 @@ def input_coord(moves):
 def to_coords(fst, board, p, type_of_move, game):
     move = None
     
-    if isnt_int(fst[0]) or isnt_str(fst[1]):
-        #move = input_coord(fst)
+    if isntValid(fst):
         if move == None:
             rule_check = mock_rule_check(game.board, fst, p, type_of_move, game)
         
@@ -74,7 +73,7 @@ def to_coords(fst, board, p, type_of_move, game):
             return move
         
     fst[0] = int(fst[0])
-    fst[1] = str(fst[1])
+    fst[1] = fst[1]
 
     if fst[0] > 7 or fst[1] > 'g':
         rule_check = mock_rule_check(game.board, [100,100], p, type_of_move, game)
@@ -96,7 +95,7 @@ def to_coords(fst, board, p, type_of_move, game):
 
     if type_of_move == 'move':
         fst[2] = int(fst[2])
-        fst[3] = str(fst[3])
+        fst[3] = fst[3]
         move_from = input_coord([fst[0],fst[1]])
         move_to = input_coord([fst[2], fst[3]])
         
@@ -124,4 +123,14 @@ def isnt_str(s):
         return False
     except ValueError:
         return True
+    
+def isntValid(s):
+    # Valid [int, str] or [int, str, int, str]
+    if len(s) == 2:
+        if isnt_int(s[0]) or isnt_str(s[1]):
+            return True
+    if len(s) == 4:
+        if isnt_int(s[0]) or isnt_str(s[1]) or isnt_int(s[2]) or isnt_str(s[3]):
+            return True
+    return False
 

@@ -1,5 +1,6 @@
 from board_rep import Board
 from mock_rule import mock_rule_check
+from input_player import to_coords
 
 # Mocks
 from mock_player import*
@@ -45,14 +46,13 @@ class game:
                     print('Place piece on a vacant spot')
                     move_row = input('Input which row variable = ')
                     move_coloumn = input('Input which coloumn variable = ')
+                    move = to_coords([move_row, move_coloumn],self.board, p, 'place', self)
                     print(' ')
-                    rule_check = mock_rule_check(self.board,[move_row,move_coloumn],p,'place',self)
-                
-                    if rule_check[0] != 'True':
-                        print(rule_check[1])
-                        print(self.board)
-                    else:
+            
+                    if move != None:
                         rule_pass = True
+                        move_row = move[0]
+                        move_coloumn = move[1]
                 
                 self.board.set_piece(move_row,move_coloumn,p)
                 self.unplaced[p] -= 1
@@ -64,10 +64,20 @@ class game:
                 
             else: #Phase 2 and 3 starts here
                 
-                if self.game_phase == 1: #Phase 3 could have been initizalised before, so only print rules
-                    #If phase 1 is over.
-                    self.game_phase = 2 #If phase 1 is over. start phase 2.
-                    self.rule_print() #Phase 3 starts in mock_rule
+                if self.board.count_pieces(p) <= 3: #Phase 3 starts    
+                    if  self.game_phase == 2:
+                        self.game_phase = 3 
+                        self.rule_print()
+                    elif self.game_phase == 1:
+                        self.game_phase = 2 
+                        self.rule_print()
+                        self.game_phase = 3 
+                        self.rule_print()    
+            
+                    if self.game_phase == 1: #Phase 3 could have been initizalised before, so only print rules
+                        #If phase 1 is over.
+                        self.game_phase = 2 #If phase 1 is over. start phase 2.
+                        self.rule_print() #Phase 3 starts in mock_rule.py                                               
                     
                 
                 
@@ -77,19 +87,27 @@ class game:
                     pick_row = input("Pick row ")
                     pick_coloumn = input("Pick coloumn ")
                     
-                    print('Move to adjecent piece \n')
+                    if self.game_phase == 2:
+                        print('Move to adjecent piece \n')
+                    elif self.game_phase == 3:
+                        print('Move to any piece \n')
                     move_row = input('Input which row variable = ')
                     move_coloumn = input('Input which coloumn variable = ')
-                    print(' ')
-                    rule_check = mock_rule_check(self.board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'move',self)
                     
-                    if rule_check[0] != 'True':
-                        print(rule_check[1])
-                        print(self.board)
-                    else: 
-                        rule_pass =  True
-                self.board.set_piece(pick_row, pick_coloumn, '.')
-                self.board.set_piece(move_row, move_coloumn, p)
+                    moves = to_coords([pick_row, pick_coloumn, move_row, move_coloumn], self.board, p, 'move', self)
+            
+                    print(' ')
+            
+                    if moves != None:
+                        rule_pass = True
+                        pick_row = moves[0]
+                        pick_coloumn = moves[1]
+
+                        move_row = moves[2]
+                        move_coloumn = moves[3]
+
+                self.board.set_piece(moves[0], moves[1], '.')
+                self.board.set_piece(moves[2], moves[3], p)
                 
 
             if self.board.find_mill(move_row, move_coloumn, p): 
@@ -97,19 +115,21 @@ class game:
                 #itterate over all positions in the board to find what if the peice is 'B' or 'W' and not in a mill
                 #Set to 0 Before every itteration to avoid memories
                 
-                self.free_pieces = {'W':[],'B':[]} # Pieces that are not in a mill
-                self.pieces_in_mills = {'W':[],'B':[]} #Pieces that are in a milly
-                lst=[]
-                lst2=[]
+                
+                free_pieces = [] # Pieces that are not in a mill
+                pieces_in_mills = [] #Pieces that are in a milly
+
                 for i in range(0,9):
                     for j in range(0,9):
-                        if self.board.get_piece(i,j) == opponent[p]:
-                            lst.append([i,j])
                         if self.board.get_piece(i,j) == opponent[p] and self.board.find_mill(i, j, opponent[p]):
-                            self.pieces_in_mills[opponent[p]].append([i,j])
+                            pieces_in_mills.append([i,j])
+                    
                         elif self.board.get_piece(i,j) == opponent[p] and not self.board.find_mill(i, j, opponent[p]):
-                            self.free_pieces[opponent[p]].append([i,j]) #Pieces that are not in a mill   
-                            lst2.append([i,j])
+                            free_pieces.append([i,j]) #Pieces that are not in a mill   
+                
+
+                print(f"free pieces = {free_pieces}")
+                print(f"pieces in mills = {pieces_in_mills}")
 
 
                 print(self.board)
@@ -121,22 +141,24 @@ class game:
                 while rule_pass == False:
                     pick_row = input("Pick row = ")
                     pick_coloumn = input("Pick coloumn = ")
-                    
-                    if self.free_pieces[opponent[p]] != []: #If there are free pieces, you can only remove free pieces
-                        if [pick_row,pick_coloumn] in self.pieces_in_mills[opponent[p]]:
-                            print("You can only remove free pieces, not formed mills")
-                            print(self.board)
-                            continue #Continue to next itteration of while loop
+                    pick_move = to_coords([pick_row, pick_coloumn], self.board, p, 'remove', self)
+
+
+                    if pick_move != None:
+                        rule_pass =  True
+                        pick_row = pick_move[0]
+                        pick_coloumn = pick_move[1]              
+                        if free_pieces != []: #If there are free pieces, you can only remove free pieces
+                            if [int(pick_row),int(pick_coloumn)] in pieces_in_mills:
+                                print("You can only remove free pieces, not formed mills")
+                                rule_pass =  False 
+                                print(self.board)
+                                continue 
                     
                     print(' ')
-                    rule_check = mock_rule_check(self.board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'remove',self)
-                    if rule_check[0] != 'True':
-                        print(rule_check[1])
-                        print(self.board)
-                    else:
-                        rule_pass =  True
+                    
                         
-                self.board.set_piece(pick_row, pick_coloumn, '.')
+                self.board.set_piece(pick_move[0], pick_move[1], '.')
                 self.inventory[opponent[p]] -= 1
 
             # Check if player has less than 3 pieces left    
@@ -147,6 +169,22 @@ class game:
                     self.winner = self.player['W']
                 else:
                     self.winner = self.player['B']
+                self.rule_print()    
+                break #Breaks the while loop
+
+            if self.nr_turns >= 300: #If 300 turns have passed, the game is over
+                if self.inventory['B'] > self.inventory['W']:
+                    self.winner = 'B'
+                else:
+                    self.winner = 'W' 
+
+            if self.inventory['B'] < 3 or self.inventory['W'] < 3: #If one player has less than 3 pieces, the game is over
+                self.game_phase = 'End'  
+                self.game_over = True
+                if self.inventory['B'] < 3:
+                    self.winner = 'W'
+                else:
+                    self.winner = 'B'
                 self.rule_print()    
                 break #Breaks the while loop 
 
@@ -161,7 +199,6 @@ class game:
                     self.game_phase = 'End' 
                     self.game_over = True
                     self.winner = self.player[p]
-
                     self.rule_print()
                     break #Breaks the while loop
 
