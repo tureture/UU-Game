@@ -1,0 +1,1 @@
+ board.find_mill(i, j, opponent[p])
