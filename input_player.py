@@ -1,5 +1,31 @@
 from mock_rule import mock_rule_check
 
+def input_player(game, p, type_of_move):
+    if type_of_move == 'place':
+        print('Place piece on a vacant spot')
+        move_row = input('Input which row variable = ')
+        move_coloumn = input('Input which coloumn variable = ')
+        return to_coords([move_row, move_coloumn],game.board, p, 'place')
+        
+    elif type_of_move == 'move':
+        print("Pick piece from board to move")
+        pick_row = input("Pick row ")
+        pick_coloumn = input("Pick coloumn ")
+        
+        if game.game_phase == 2:
+            print('Move to adjecent piece \n')
+        elif game.game_phase == 3:
+            print('Move to any piece \n')
+        move_row = input('Input which row variable = ')
+        move_coloumn = input('Input which coloumn variable = ')
+        return to_coords([pick_row, pick_coloumn, move_row, move_coloumn], game.board, p, 'move')
+    
+    elif type_of_move == 'remove':
+        pick_row = input("Pick row = ")
+        pick_coloumn = input("Pick coloumn = ")
+        return to_coords([pick_row, pick_coloumn], game.board, p, 'remove')
+
+
 def input_coord(moves):
     #moves = [int , str]
     [row, column] = moves
@@ -59,16 +85,16 @@ def input_coord(moves):
 
 
 
-def to_coords(fst, board, p, type_of_move, game):
+def to_coords(fst, board, p, type_of_move):
     move = None
     
     if isntValid(fst):
         if move == None:
-            rule_check = mock_rule_check(game.board, fst, p, type_of_move, game)
+            rule_check = mock_rule_check(board, fst, p, type_of_move)
         
             if rule_check[0] != 'True':
                 print(rule_check[1])
-                print(game.board)
+                print(board)
                 move = None
             return move
         
@@ -76,20 +102,20 @@ def to_coords(fst, board, p, type_of_move, game):
     fst[1] = fst[1]
 
     if fst[0] > 7 or fst[1] > 'g':
-        rule_check = mock_rule_check(game.board, [100,100], p, type_of_move, game)
+        rule_check = mock_rule_check(board, [100,100], p, type_of_move)
         if rule_check[0] != 'True':
                 print(rule_check[1])
-                print(game.board)
+                print(board)
                 move = None
         
     if type_of_move == 'place' or type_of_move == 'remove':
         move = input_coord(fst)
         if move != None:
-            rule_check = mock_rule_check(game.board, move, p, type_of_move, game)
+            rule_check = mock_rule_check(board, move, p, type_of_move)
 
             if rule_check[0] != 'True':
                 print(rule_check[1])
-                print(game.board)
+                print(board)
                 move = None
         return move
 
@@ -99,13 +125,15 @@ def to_coords(fst, board, p, type_of_move, game):
         move_from = input_coord([fst[0],fst[1]])
         move_to = input_coord([fst[2], fst[3]])
         
-        if move_from != None or move_to!= None:
-            move = move_to+move_from
-            rule_check = mock_rule_check(game.board, move, p, type_of_move, game)
+        if move_from != None and move_to!= None: 
+            move = move_from + move_to
+            print(move)
+            rule_check = mock_rule_check(board, move, p, type_of_move)
 
             if rule_check[0] != 'True':
                 print(rule_check[1])
-                print(game.board)
+
+                print(board)
                 move = None
         return move
 

@@ -1,13 +1,14 @@
 from board_rep import Board
 from mock_rule import mock_rule_check
 from input_player import to_coords
+from input_player import input_player
 
 # Mocks
 from mock_player import*
 from mock_endgame import*
 
 class game:
-    def __init__(self,p1='Blackplayer',p2='Whiteplayer'):
+    def __init__(self,p1='Blackplayer',p2='Whiteplayer',inputB = input_player,inputW = input_player):
         self.board = Board()    # Create a board object
         self.turn = 'B'           # Keep track of whose turn it is
         self.nr_turns = 1         # Keep track of the number of turns
@@ -15,7 +16,7 @@ class game:
         self.winner = None        # Keep track of who the winner is
         self.inventory = {'B': 9, 'W': 9} # Keep track of the number of pieces each player has
         self.unplaced = {'B': 9, 'W': 9}  # Keep track of the number of pieces each player has yet to place
-        self.inputsources = {'B': mock_player(), 'W': mock_player()} # Keep track of the input source for each player
+        self.inputsources = {'B': inputB, 'W': inputW} # Keep track of the input source for each player
         self.game_phase = 1 #Game phase starts at 1, 2 and 3 are the other phases, phase 4 is the endgame phase.
         self.player = {'B':p1,'W':p2}
 
@@ -43,10 +44,7 @@ class game:
                 
             if self.unplaced[p] > 0:
                 while rule_pass == False:
-                    print('Place piece on a vacant spot')
-                    move_row = input('Input which row variable = ')
-                    move_coloumn = input('Input which coloumn variable = ')
-                    move = to_coords([move_row, move_coloumn],self.board, p, 'place', self)
+                    move = self.inputsources[p](self, p, 'place')
                     print(' ')
             
                     if move != None:
@@ -57,10 +55,6 @@ class game:
                 self.board.set_piece(move_row,move_coloumn,p)
                 self.unplaced[p] -= 1
         
-                
-                
-            
-            
                 
             else: #Phase 2 and 3 starts here
                 
@@ -82,19 +76,9 @@ class game:
                 
                 
                 while rule_pass == False:
+                    moves = self.inputsources[p](self, p, 'move')
+
                     
-                    print("Pick piece from board to move")
-                    pick_row = input("Pick row ")
-                    pick_coloumn = input("Pick coloumn ")
-                    
-                    if self.game_phase == 2:
-                        print('Move to adjecent piece \n')
-                    elif self.game_phase == 3:
-                        print('Move to any piece \n')
-                    move_row = input('Input which row variable = ')
-                    move_coloumn = input('Input which coloumn variable = ')
-                    
-                    moves = to_coords([pick_row, pick_coloumn, move_row, move_coloumn], self.board, p, 'move', self)
             
                     print(' ')
             
@@ -139,9 +123,8 @@ class game:
                 print(f"Pick piece from {opponent[p]}'s to remove")
 
                 while rule_pass == False:
-                    pick_row = input("Pick row = ")
-                    pick_coloumn = input("Pick coloumn = ")
-                    pick_move = to_coords([pick_row, pick_coloumn], self.board, p, 'remove', self)
+                    pick_move = self.inputsources[p](self, p, 'remove')
+                    
 
 
                     if pick_move != None:
