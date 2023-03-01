@@ -46,7 +46,7 @@ class game:
                     print('Place piece on a vacant spot')
                     move_row = input('Input which row variable = ')
                     move_coloumn = input('Input which coloumn variable = ')
-                    move = to_coords([move_row, move_coloumn],self.board, p, 'place', self)
+                    move = to_coords([move_row, move_coloumn], p, 'place', self)
                     print(' ')
             
                     if move != None:
@@ -94,7 +94,7 @@ class game:
                     move_row = input('Input which row variable = ')
                     move_coloumn = input('Input which coloumn variable = ')
                     
-                    moves = to_coords([pick_row, pick_coloumn, move_row, move_coloumn], self.board, p, 'move', self)
+                    moves = to_coords([pick_row, pick_coloumn, move_row, move_coloumn], p, 'move', self)
             
                     print(' ')
             
@@ -141,7 +141,7 @@ class game:
                 while rule_pass == False:
                     pick_row = input("Pick row = ")
                     pick_coloumn = input("Pick coloumn = ")
-                    pick_move = to_coords([pick_row, pick_coloumn], self.board, p, 'remove', self)
+                    pick_move = to_coords([pick_row, pick_coloumn], p, 'remove', self)
 
 
                     if pick_move != None:

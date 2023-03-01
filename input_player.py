@@ -59,7 +59,7 @@ def input_coord(moves):
 
 
 
-def to_coords(fst, board, p, type_of_move, game):
+def to_coords(fst, p, type_of_move, game):
     move = None
     
     if isntValid(fst):
@@ -99,8 +99,8 @@ def to_coords(fst, board, p, type_of_move, game):
         move_from = input_coord([fst[0],fst[1]])
         move_to = input_coord([fst[2], fst[3]])
         
-        if move_from != None or move_to!= None:
-            move = move_to+move_from
+        if move_from != None and move_to!= None:
+            move = move_from+move_to
             rule_check = mock_rule_check(game.board, move, p, type_of_move, game)
 
             if rule_check[0] != 'True':

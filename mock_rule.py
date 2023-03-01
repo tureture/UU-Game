@@ -21,7 +21,7 @@ def mock_rule_check(board, move, turn, type_of_move, game):
             mov_1= int(move[2])
             mov_2= int(move[3])
             if [mov_1,mov_2] in board.get_adjacent_spaces(move[0],move[1]):
-                if board.get_piece(move[2], move[3]) != '.':
+                if board.get_piece(mov_1, mov_2) != '.':
                     return ['False', 'That space is already occupied.']
             else:   
                 return ['False', 'Non-adjacent']
