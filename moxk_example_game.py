@@ -1,11 +1,12 @@
 # Chose a phase 1 2 or 3
 #Can not take away 2 pieceses if 2 mills are formed!
 from board_rep import Board
-from game_loop import game_loop
+from game_loop import game
 from mock_rule import mock_rule_check
+from Minimax import Minimax_agent
 
 
-game = game_loop()
+game = game()
 board = Board()
 rule_pass = False
 opponent = {'W':'B','B':'W'}
@@ -20,6 +21,7 @@ while game.game_over == "False" and start_game == 'y':
         print("Player", p, "turn", game.nr_turns)
         print(board)
         print("Inventory: ", game.inventory)
+        
         print(f"Unplaced pieces player {p}: ", game.unplaced[p])
     else: 
         p = 'W'
@@ -29,18 +31,23 @@ while game.game_over == "False" and start_game == 'y':
         print(f"Unplaced pieces player {p}: ", game.unplaced[p])
         
     if game.unplaced[p] > 0:
-        while rule_pass == False:
-            print('Place piece on a vacant spot')
-            move_row = input('Input which row variable = ')
-            move_coloumn = input('Input which coloumn variable = ')
-            print(' ')
-            rule_check = mock_rule_check(board,[move_row,move_coloumn],p,'place',game)
-        
-            if rule_check[0] != 'True':
-                print(rule_check[1])
-                print(board)
-            else:
-                rule_pass = True
+        print('Place piece on a vacant spot')
+        if (p == 'W'):
+            AI_input = Minimax_agent(1).minimax(game, p, True)
+            move_row = AI_input[1][2]
+            move_coloumn = AI_input[1][3]
+        else: 
+            while rule_pass == False:   
+                move_row = input('Input which row variable = ')
+                move_coloumn = input('Input which coloumn variable = ')
+                print(' ')
+                rule_check = mock_rule_check(board,[move_row,move_coloumn],p,'place')
+            
+                if rule_check[0] != 'True':
+                    print(rule_check[1])
+                    print(board)
+                else:
+                    rule_pass = True
         
         board.set_piece(move_row,move_coloumn,p)
         game.unplaced[p] -= 1
@@ -67,27 +74,34 @@ while game.game_over == "False" and start_game == 'y':
             game.game_phase = 2 #If phase 1 is over. start phase 2.
             game.rule_print() #Phase 3 starts in mock_rule
             
-
+        print("Pick piece from board to move")
+        if (p == 'W'):
+            AI_input = Minimax_agent(1).minimax(game, p, True)
+            pick_row = AI_input[1][0]
+            pick_coloumn = AI_input[1][1]
+            move_row = AI_input[1][2]
+            move_coloumn = AI_input[1][3]
+        else:        
         
-        while rule_pass == False:
+            while rule_pass == False:
             
-            print("Pick piece from board to move")
-            pick_row = input("Pick row ")
-            pick_coloumn = input("Pick coloumn ")
-            if game.game_phase == 2:
-                print('Move to adjecent piece \n')
-            elif game.game_phase == 3:
-                print('Move to any piece \n')
-            move_row = input('Input which row variable = ')
-            move_coloumn = input('Input which coloumn variable = ')
-            print(' ')
-            rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'move',game)
+                pick_row = input("Pick row ")
+                pick_coloumn = input("Pick coloumn ")
+                if game.game_phase == 2:
+                    print('Move to adjecent piece \n')
+                elif game.game_phase == 3:
+                    print('Move to any piece \n')
+                move_row = input('Input which row variable = ')
+                move_coloumn = input('Input which coloumn variable = ')
+                print(' ')
+                rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'move')
             
-            if rule_check[0] != 'True':
-                print(rule_check[1])
-                print(board)
-            else: 
-                rule_pass =  True
+                if rule_check[0] != 'True':
+                    print(rule_check[1])
+                    print(board)
+                else: 
+                    rule_pass =  True
+                    
         game.board.set_piece(pick_row, pick_coloumn, '.')
         game.board.set_piece(move_row, move_coloumn, p)
         
@@ -98,46 +112,56 @@ while game.game_over == "False" and start_game == 'y':
         
         #itterate over all positions in the board to find what if the peice is 'B' or 'W' and not in a mill
         #Set to 0 Before every itteration to avoid memories
-        
-        free_pieces = [] # Pieces that are not in a mill
-        pieces_in_mills = [] #Pieces that are in a milly
-
-        for i in range(0,9):
-            for j in range(0,9):
-                if board.get_piece(i,j) == opponent[p] and board.find_mill(i, j, opponent[p]):
-                    pieces_in_mills.append([i,j])
-               
-                elif board.get_piece(i,j) == opponent[p] and not board.find_mill(i, j, opponent[p]):
-                    free_pieces.append([i,j]) #Pieces that are not in a mill   
-                
-
-        print(f"free pieces = {free_pieces}")
-        print(f"pieces in mills = {pieces_in_mills}")
-
-        print(board)
-        rule_pass = False
-        
         print(f"Mill formed by {p}")
         print(f"Pick piece from {opponent[p]}'s to remove")
+        
+        if (p == 'W'):
+            AI_input = Minimax_agent(1).mill_minimax(game, p, True)
+            pick_row = AI_input[1][0]
+            pick_coloumn = AI_input[1][1]
+            board.set_piece(pick_row, pick_coloumn, '.')
+        
 
-        while rule_pass == False:
-            pick_row = (input("Pick row = "))
-            pick_coloumn = input("Pick coloumn = ")
+        else:
+            free_pieces = [] # Pieces that are not in a mill
+            pieces_in_mills = [] #Pieces that are in a milly
+
+            for i in range(0,9):
+                for j in range(0,9):
+                    if board.get_piece(i,j) == opponent[p] and board.find_mill(i, j, opponent[p]):
+                        pieces_in_mills.append([i,j])
+                
+                    elif board.get_piece(i,j) == opponent[p] and not board.find_mill(i, j, opponent[p]):
+                        free_pieces.append([i,j]) #Pieces that are not in a mill   
+                    
+
+            print(f"free pieces = {free_pieces}")
+            print(f"pieces in mills = {pieces_in_mills}")
+
+            print(board)
+            rule_pass = False
             
-            rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'remove',game)
-            if rule_check[0] != 'True':
-                print(rule_check[1])
-                print(board)
-                continue            
-            else:               
-                if free_pieces != []: #If there are free pieces, you can only remove free pieces
-                    if [int(pick_row),int(pick_coloumn)] in pieces_in_mills:
-                        print("You can only remove free pieces, not formed mills")
-                        print(board)
-                        continue #Continue to next itteration of while loop
-                rule_pass =  True    
+           
             
-            print(' ')
+
+            while rule_pass == False:
+                pick_row = (input("Pick row = "))
+                pick_coloumn = input("Pick coloumn = ")
+                
+                rule_check = mock_rule_check(board,[pick_row,pick_coloumn,move_row,move_coloumn],p,'remove')
+                if rule_check[0] != 'True':
+                    print(rule_check[1])
+                    print(board)
+                    continue            
+                else:               
+                    if free_pieces != []: #If there are free pieces, you can only remove free pieces
+                        if [int(pick_row),int(pick_coloumn)] in pieces_in_mills:
+                            print("You can only remove free pieces, not formed mills")
+                            print(board)
+                            continue #Continue to next itteration of while loop
+                    rule_pass =  True    
+                
+                print(' ')
 
 
                 

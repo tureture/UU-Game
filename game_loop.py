@@ -17,6 +17,7 @@ class game:
         self.inputsources = {'B': mock_player(), 'W': mock_player()} # Keep track of the input source for each player
         self.game_phase = 1 #Game phase starts at 1, 2 and 3 are the other phases, phase 4 is the endgame phase.
         self.player = {'B':p1,'W':p2}
+        self.mill_formed = False
 
 
     def start(self):

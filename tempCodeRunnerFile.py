@@ -1,1 +1,2 @@
- board.find_mill(i, j, opponent[p])
+ow = AI_input[1][0]
+                move_coloumn = AI_input[1][1]

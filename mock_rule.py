@@ -1,6 +1,6 @@
 
 
-def mock_rule_check(board, move, turn, type_of_move, game):
+def mock_rule_check(board, move, turn, type_of_move): #Remove game as input
     if isnt_int(move[0]) or isnt_int(move[1]):
         return ['False', 'Input was not a number']
     

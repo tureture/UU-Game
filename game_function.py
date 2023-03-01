@@ -13,6 +13,7 @@ def game_function(whiteplayer, blackplayer):
     game.rule_print()
     start_game = input('Start game? y/n ')
     while game.game_over == "False" and start_game == 'y':
+        game.mill_formed = False
         ###Print rules by calling print rule funciton first itteration if game.turn==1
         board = game.board
         
@@ -105,6 +106,7 @@ def game_function(whiteplayer, blackplayer):
             rule_pass = False
             
             print(f"Mill formed by {p}")
+            game.mill_formed = True
             print(f"Pick piece from {opponent[p]}'s to remove")
 
             while rule_pass == False:

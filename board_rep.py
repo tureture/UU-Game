@@ -40,7 +40,7 @@ class Board:
             return None
         else:
             return self.board[row][col]
-
+        
     def set_piece(self, row, col, piece):
         row = int(row)
         col = int(col)
