@@ -33,13 +33,13 @@ class game:
                 print("Player", p, "turn", self.nr_turns)
                 print(self.board)
                 print("Inventory: ", self.inventory)
-                print(f"Unplaced pieces player {p}: ", self.unplaced[p])
+                print(f"Unplaced pieces player {self.player[p]}: ", self.unplaced[p])
             else: 
                 p = 'W'
                 print("Player", p, "turn", self.nr_turns)
                 print(self.board)
                 print("Inventory: ", self.inventory)
-                print(f"Unplaced pieces player {p}: ", self.unplaced[p])
+                print(f"Unplaced pieces player {self.player[p]}: ", self.unplaced[p])
                 
             if self.unplaced[p] > 0:
                 while rule_pass == False:
