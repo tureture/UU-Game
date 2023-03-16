@@ -21,7 +21,7 @@ class Minimax_agent:
             self.toss = 0.5
         elif self.difficulty == 3:
             self.depth = 4
-            self.toss = 0.9   
+            self.toss = 0.8   
         elif self.difficulty == 4:
             self.depth = 6
             self.toss = 1   
