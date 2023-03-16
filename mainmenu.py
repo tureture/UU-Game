@@ -2,6 +2,7 @@ import os
 import random
 from game_loop import game
 from game_loop_AI import game as game_AI
+from game_AI_vs_AI import game as game_AI_vs_AI
 
 def welcome():
     print("Welcome to the game")
@@ -182,21 +183,52 @@ def game_type_1(gametype):
 
 def game_type_other(gametype):
     while True:
-        ai_difficulty = input("Select level of difficulty for AI (1- Noob, 2- Intermediate, 3- Pro)  or enter 'q' to exit from the game: : ")
-        if ai_difficulty == "q":
-            print("Exiting the game...")
-            exit()
-        elif ai_difficulty == "1" or ai_difficulty == "2" or ai_difficulty == "3":
-            break
+        if gametype == "HvAI":
+            ai_difficulty = input("Select level of difficulty for AI (1- Noob, 2- Intermediate, 3- Pro)  or enter 'q' to exit from the game: : ")
+        elif gametype == "AIvAI":
+            ai_1_difficulty = input("Select level of difficulty for AI 1 (1- Noob, 2- Intermediate, 3- Pro)  or enter 'q' to exit from the game: : ")
+            ai_2_difficulty = input("Select level of difficulty for AI 2 (1- Noob, 2- Intermediate, 3- Pro)  or enter 'q' to exit from the game: : ") 
+        if gametype == "HvAI":      
+            if ai_difficulty == "q":
+                print("Exiting the game...")
+                exit()
+            elif ai_difficulty == "1" or ai_difficulty == "2" or ai_difficulty == "3":
+                break
+            else:
+                print("Invalid input! Please enter the level of difficulty for AI in the form of 1, 2, or 3.")
         else:
-            print("Invalid input! Please enter the level of difficulty for AI in the form of 1, 2, or 3.")
-
-    if ai_difficulty == "1":
-        print("AI level set to Noob.")
-    elif ai_difficulty == "2":
-        print("AI level set to Intermediate.")
-    else:
-        print("AI level set to Pro.")
+            if ai_1_difficulty == "q" or ai_2_difficulty == "q":
+                print("Exiting the game...")
+                exit()
+            elif ai_1_difficulty == "1" or ai_1_difficulty == "2" or ai_1_difficulty == "3":
+                if ai_2_difficulty == "1" or ai_2_difficulty == "2" or ai_2_difficulty == "3":
+                    break
+                else:
+                    print("Invalid input! Please enter the level of difficulty for AI 2 in the form of 1, 2, or 3.")
+            else:
+                print("Invalid input! Please enter the level of difficulty for AI 1 in the form of 1, 2, or 3.")        
+            
+    if gametype == "AIvAI":        
+        if ai_1_difficulty == "1":
+            print("AI 1 level set to Noob.")
+        elif ai_1_difficulty == "2":
+            print("AI 1 level set to Intermediate.")
+        else:
+            print("AI 1 level set to Pro.")
+            
+        if ai_2_difficulty == "1":
+            print("AI 2 level set to Noob.")
+        elif ai_2_difficulty == "2":
+            print("AI 2 level set to Intermediate.")
+        else:
+            print("AI 2 level set to Pro.")
+    else: 
+        if ai_difficulty == "1":
+            print("AI level set to Noob.")
+        elif ai_difficulty == "2":
+            print("AI level set to Intermediate.")
+        elif ai_difficulty == "3":
+            print("AI level set to Pro.")
 
     print("Enter the player names or enter 'q' to exit from the game. ")
     if gametype == "HvAI":
@@ -222,8 +254,11 @@ def game_type_other(gametype):
                 break
             else:
                 print("Invalid input! Please choose either Black or White.")
-        else: 
+        else:
+            player1_color = random.choice(["black", "white"])
+            print(f"AI {player1_name} has been assigned the color: {player1_color}")
             print("Starting AI vs AI game...")
+            break
 
     print("Gametype is: ", gametype)
 
@@ -235,10 +270,18 @@ def game_type_other(gametype):
             curr_game = game_AI(player2_name, player1_name,'W',ai_difficulty)
             #game.inputsources['B'] = ai_function(ai_difficulty)
     elif gametype == "AIvAI":
-        if random.random()<0.5:
-            print(f"{player1_name} is Winner")
-        else:
-            print(f"{player2_name} is Winner")
+        if player1_color == "black":
+            curr_game = game_AI_vs_AI(player1_name, player2_name,ai_1_difficulty)
+        elif player1_color == "white":
+            curr_game = game_AI_vs_AI(player2_name, player1_name,ai_2_difficulty)
+        
+        # if random.random()<0.5: #Randomly sets AI Winner if they are of same level
+        #     print(f"{player1_name} is Winner")
+        # else:
+        #     print(f"{player2_name} is Winner")
+        # print("Game Over")
+        # print("Does it make you happy to let 2 AI play against each other?")    
+        # exit()
         #Set Winner    
         
         # if player1_color == "black":

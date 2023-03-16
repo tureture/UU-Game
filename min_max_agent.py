@@ -26,12 +26,13 @@ class Minimax_agent:
             self.depth = 6
             self.toss = 1   
         else:
+            print("Error with wrong difficulty input")
             print(type(diff)) 
 
     def flip(self):
         return True if random.random() < self.toss else False
     
-    def get_leagal_moves(self,board, unplaced, p): #p is the p of the player you want to find leagal moves for
+    def get_leagal_moves(self,board, unplaced, p, game): #p is the p of the player you want to find leagal moves for
         
         
         
@@ -48,7 +49,7 @@ class Minimax_agent:
                     if board.get_piece(i,j) == p:
                         for k in range(0,9):
                             for l in range(0,9):
-                                if mock_rule_check(board,[i,j,k,l],p,'move')[0] == 'True':
+                                if mock_rule_check(board,[i,j,k,l],p,'move',game)[0] == 'True':
                                     leagal_moves.append([i,j,k,l]) ## [i,j] is the piece to move, [k,l] is the destination
         return leagal_moves
                                     
@@ -84,7 +85,7 @@ class Minimax_agent:
         if self.flip():
             return self._minimax(game, p, self.depth , maximizingPlayer, alpha, beta)
         else:
-            moves = self.get_leagal_moves(game.board, game.unplaced[p] ,p)
+            moves = self.get_leagal_moves(game.board, game.unplaced[p] ,p, game)
             random_return = random.choice(moves)
             return [0, random_return]
                 
@@ -98,7 +99,7 @@ class Minimax_agent:
 
         if maximizingPlayer == True:
             maxEval = -10000000 
-            for move in self.get_leagal_moves(game.board, game.unplaced[p] ,p): ##All possible moves
+            for move in self.get_leagal_moves(game.board, game.unplaced[p] ,p, game): ##All possible moves
                 game_copy = copy(game) 
                 game_copy.unplaced[p] -= 1
                 board_copy = game_copy.board
@@ -127,7 +128,7 @@ class Minimax_agent:
             
                   
             minEval = 1000000
-            for move in self.get_leagal_moves(game.board, game.unplaced[p] ,p):
+            for move in self.get_leagal_moves(game.board, game.unplaced[p] ,p, game):
                 game_copy = copy(game)
                 board_copy = game_copy.board #Copy the board, update the copy, and then pass the copy to the next level of recursion
                 if move[0] == 'U_p': #If the move is to place a piece

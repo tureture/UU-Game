@@ -128,8 +128,8 @@ class game:
                             free_pieces.append([i,j]) #Pieces that are not in a mill   
                 
 
-                print(f"free pieces = {free_pieces}")
-                print(f"pieces in mills = {pieces_in_mills}")
+                # print(f"free pieces = {free_pieces}")
+                # print(f"pieces in mills = {pieces_in_mills}")
 
 
                 print(self.board)
@@ -173,10 +173,15 @@ class game:
                 break #Breaks the while loop
 
             if self.nr_turns >= 300: #If 300 turns have passed, the game is over
-                if self.inventory['B'] > self.inventory['W']:
-                    self.winner = 'B'
+                self.game_phase = 'End'
+                self.game_over = True
+                if self.inventory['B'] == self.inventory['W']:
+                    self.winner = ['Draw']
+                elif self.inventory['B'] > self.inventory['W']:
+                    self.winner = self.player['B']
                 else:
-                    self.winner = 'W' 
+                    self.winner = self.player['W'] 
+                self.rule_print()     
 
             if self.inventory['B'] < 3 or self.inventory['W'] < 3: #If one player has less than 3 pieces, the game is over
                 self.game_phase = 'End'  
@@ -220,6 +225,7 @@ class game:
         if self.game_phase == 1:
             print('Welcome to VegaSoft latest game installment \n')
             print('The rules of the game are as follows: \n')
+            print('When putting piece on grid, you must first put a coordinate which represents a number then a letter, if that order is not followed you will get invalid move \n')
             print("The objective of the game is to form rows of three by placing or moving your pieces into rows of three's, called mills\n")
             print('Forming a mill allows you to remove a piece from your opponent.\n')
             print('If your opponent has a mill formed and has other pieces left, you may not take a piece from that mill formation \n')

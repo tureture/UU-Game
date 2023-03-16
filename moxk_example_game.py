@@ -106,7 +106,8 @@ while game.game_over == "False" and start_game == 'y':
     if board.find_mill(move_row, move_coloumn, p): 
         #itterate over all positions in the board to find what if the peice is 'B' or 'W' and not in a mill
         #Set to 0 Before every itteration to avoid memories
-        
+  
+                
         free_pieces = [] # Pieces that are not in a mill
         pieces_in_mills = [] #Pieces that are in a milly
 
