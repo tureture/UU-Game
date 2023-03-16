@@ -1,6 +1,7 @@
 import os
 import random
 from game_loop import game
+from game_loop_AI import game as game_AI
 
 def welcome():
     print("Welcome to the game")
@@ -198,8 +199,12 @@ def game_type_other(gametype):
         print("AI level set to Pro.")
 
     print("Enter the player names or enter 'q' to exit from the game. ")
-    player1_name = input("Enter name of Player 1: ")
-    player2_name = input("Enter name of Player 2: ")
+    if gametype == "HvAI":
+        player1_name = input("Enter name of Human Player: ")
+        player2_name = input("Enter name of AI Player: ")
+    else:
+        player1_name = input("Enter name of AI Player 1: ")
+        player2_name = input("Enter name of AI Player 2: ")   
     if player1_name == "q" or player2_name == "q":
         print("Exiting the game...")
         exit()
@@ -208,33 +213,42 @@ def game_type_other(gametype):
         player2_name = input("Enter name of Player 2: ")
 
     while True:
-        player1_color = input("Player 1: Choose your color (Black or White) or enter 'q' to exit from the game. : ").lower()
-        if player1_color == "q":
-            print("Exiting the game...")
-            exit()
-        elif player1_color == "black" or player1_color == "white":
-            break
-        else:
-            print("Invalid input! Please choose either Black or White.")
+        if gametype == "HvAI":
+            player1_color = input("Human player: Choose your color (Black or White) or enter 'q' to exit from the game. : ").lower()
+            if player1_color == "q":
+                print("Exiting the game...")
+                exit()
+            elif player1_color == "black" or player1_color == "white":
+                break
+            else:
+                print("Invalid input! Please choose either Black or White.")
+        else: 
+            print("Starting AI vs AI game...")
 
     print("Gametype is: ", gametype)
 
     if gametype == "HvAI":
         if player1_color == "black":
-            curr_game = game(player1_name, player2_name)
+            curr_game = game_AI(player1_name, player2_name,'B',ai_difficulty)
             #game.inputsources['W'] = ai_function(ai_difficulty)
         elif player1_color == "white":
-            curr_game = game(player2_name, player1_name)
+            curr_game = game_AI(player2_name, player1_name,'W',ai_difficulty)
             #game.inputsources['B'] = ai_function(ai_difficulty)
     elif gametype == "AIvAI":
-        if player1_color == "black":
-            curr_game = game(player1_name, player2_name)
-            #game.inputsources['W'] = ai_function(ai_difficulty)
-            #game.inputsources['B'] = ai_function(ai_difficulty)
-        elif player1_color == "white":
-            curr_game = game(player2_name, player1_name)
-            #game.inputsources['B'] = ai_function(ai_difficulty)
-            #game.inputsources['W'] = ai_function(ai_difficulty)
+        if random.random()<0.5:
+            print(f"{player1_name} is Winner")
+        else:
+            print(f"{player2_name} is Winner")
+        #Set Winner    
+        
+        # if player1_color == "black":
+        #     curr_game = game(player1_name, player2_name)
+        #     #game.inputsources['W'] = ai_function(ai_difficulty)
+        #     #game.inputsources['B'] = ai_function(ai_difficulty)
+        # elif player1_color == "white":
+        #     curr_game = game(player2_name, player1_name)
+        #     #game.inputsources['B'] = ai_function(ai_difficulty)
+        #     #game.inputsources['W'] = ai_function(ai_difficulty)
     else:
         print("Something went wrong. Please try again.")
         exit()

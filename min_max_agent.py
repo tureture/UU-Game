@@ -18,13 +18,15 @@ class Minimax_agent:
             self.toss = 0.3
         elif self.difficulty == 2:
             self.depth = 4
-            self.toss = 0.4
+            self.toss = 0.5
         elif self.difficulty == 3:
             self.depth = 4
-            self.toss = 0.8   
+            self.toss = 0.9   
         elif self.difficulty == 4:
             self.depth = 6
-            self.toss = 1    
+            self.toss = 1   
+        else:
+            print(type(diff)) 
 
     def flip(self):
         return True if random.random() < self.toss else False
